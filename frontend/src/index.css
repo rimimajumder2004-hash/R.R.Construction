@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:            #0a0b0d;
+  --surface:       #111316;
+  --card:          #16191e;
+  --border:        #252a32;
+  --border-bright: #353d48;
+  --orange:        #f97316;
+  --orange-dim:    #c2570f;
+  --orange-glow:   rgba(249,115,22,0.15);
+  --yellow:        #fbbf24;
+  --text:          #e8eaed;
+  --text-dim:      #8b949e;
+  --text-muted:    #4a5568;
+  --green:         #22c55e;
+  --red:           #ef4444;
+  --blue:          #3b82f6;
+  --purple:        #a855f7;
+  --font-display:  'Bebas Neue', sans-serif;
+  --font-body:     'Barlow', sans-serif;
+  --font-cond:     'Barlow Condensed', sans-serif;
+  --radius:        10px;
+  --shadow:        0 4px 24px rgba(0,0,0,0.4);
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--orange-dim); }
+
+/* Animations */
+@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+.fade-in  { animation: fadeIn  0.3s ease; }
+.slide-up { animation: slideUp 0.3s ease; }
