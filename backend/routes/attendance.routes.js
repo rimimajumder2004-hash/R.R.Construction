@@ -1,12 +1,20 @@
+// backend/routes/galleryRoutes.js
+
 const express = require("express");
 const router = express.Router();
-const ctrl = require("../controllers/attendance.controller");
-const { protect, adminOnly } = require("../middleware/auth.middleware");
+const {
+  getPublic,
+  getAll,
+  create,
+  remove,
+  update,
+} = require("../controllers/galleryController");
+const { protect } = require("../middleware/auth");
 
-router.get("/",                     protect, ctrl.getByDate);
-router.get("/summary",              protect, ctrl.getMonthlySummary);
-router.get("/worker/:workerId",     protect, ctrl.getByWorker);
-router.post("/",                    protect, adminOnly, ctrl.mark);
-router.post("/bulk",                protect, adminOnly, ctrl.markBulk);
+router.get("/", getPublic);
+router.get("/all", protect, getAll);
+router.post("/", protect, create);
+router.put("/:id", protect, update); // ← add this line
+router.delete("/:id", protect, remove);
 
 module.exports = router;
