@@ -1,7 +1,8 @@
 const express = require("express");
-const cors    = require("cors");
-const morgan  = require("morgan");
-const dotenv  = require("dotenv");
+const cors = require("cors");
+const morgan = require("morgan");
+const dotenv = require("dotenv");
+const path = require("path");
 const connectDB = require("./config/db");
 
 // Load env vars — must be first
@@ -23,31 +24,43 @@ connectDB();
 const app = express();
 
 // ── Middleware ──────────────────────────────────────────────────────────────
-app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  }),
+);
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
 
+// ── Static Files ───────────────────────────────────────────────────────────
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // ── Health Check ───────────────────────────────────────────────────────────
 app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", message: "R.R.Construction API is running", timestamp: new Date() });
+  res.json({
+    status: "OK",
+    message: "R.R.Construction API is running",
+    timestamp: new Date(),
+  });
 });
 
 // ── Routes ─────────────────────────────────────────────────────────────────
-app.use("/api/auth",       require("./routes/auth.routes"));
-app.use("/api/projects",   require("./routes/project.routes"));
-app.use("/api/workers",    require("./routes/worker.routes"));
+app.use("/api/auth", require("./routes/auth.routes"));
+app.use("/api/projects", require("./routes/project.routes"));
+app.use("/api/workers", require("./routes/worker.routes"));
 app.use("/api/attendance", require("./routes/attendance.routes"));
-app.use("/api/salary",     require("./routes/salary.routes"));
-app.use("/api/gallery",    require("./routes/gallery.routes"));
-app.use("/api/inquiries",  require("./routes/inquiry.routes"));
+app.use("/api/salary", require("./routes/salary.routes"));
+app.use("/api/gallery", require("./routes/gallery.routes"));
+app.use("/api/inquiries", require("./routes/inquiry.routes"));
 
 // ── 404 Handler ────────────────────────────────────────────────────────────
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: `Route ${req.method} ${req.url} not found` });
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.method} ${req.url} not found`,
+  });
 });
 
 // ── Global Error Handler ───────────────────────────────────────────────────
@@ -56,17 +69,23 @@ app.use((err, req, res, next) => {
 
   // Mongoose bad ObjectId
   if (err.name === "CastError") {
-    return res.status(400).json({ success: false, message: "Invalid ID format" });
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid ID format" });
   }
   // Mongoose duplicate key
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue)[0];
-    return res.status(400).json({ success: false, message: `${field} already exists` });
+    return res
+      .status(400)
+      .json({ success: false, message: `${field} already exists` });
   }
   // Mongoose validation error
   if (err.name === "ValidationError") {
-    const messages = Object.values(err.errors).map(e => e.message);
-    return res.status(400).json({ success: false, message: messages.join(", ") });
+    const messages = Object.values(err.errors).map((e) => e.message);
+    return res
+      .status(400)
+      .json({ success: false, message: messages.join(", ") });
   }
 
   res.status(err.statusCode || 500).json({
@@ -80,7 +99,9 @@ const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
   console.log(`\n🏗️  R.R.Construction API → http://localhost:${PORT}`);
   console.log(`   Environment : ${process.env.NODE_ENV || "development"}`);
-  console.log(`   Database    : ${process.env.MONGO_URI.split("@").pop() || "connected"}\n`);
+  console.log(
+    `   Database    : ${process.env.MONGO_URI.split("@").pop() || "connected"}\n`,
+  );
 });
 
 // Handle unhandled promise rejections

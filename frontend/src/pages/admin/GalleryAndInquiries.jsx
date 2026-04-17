@@ -135,13 +135,16 @@ export function GalleryPage() {
     try {
       const formData = new FormData();
       formData.append("image", file);
-      const res = await fetch("http://localhost:5000/api/gallery/upload", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("cms_token")}`,
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/gallery/upload`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("cms_token")}`,
+          },
+          body: formData,
         },
-        body: formData,
-      });
+      );
       const data = await res.json();
       if (data.success) setEditForm((f) => ({ ...f, imageUrl: data.imageUrl }));
       else setToast({ msg: "Upload failed", type: "error" });
