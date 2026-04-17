@@ -8,8 +8,8 @@ const {
   create,
   remove,
   update,
-} = require("../controllers/galleryController");
-const { protect } = require("../middleware/auth");
+} = require("../controllers/gallery.controller.js");
+const { protect } = require("../middleware/auth.middleware.js");
 
 router.get("/", getPublic);
 router.get("/all", protect, getAll);
