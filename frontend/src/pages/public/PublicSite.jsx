@@ -130,13 +130,6 @@ export default function PublicSite() {
             </button>
           ))}
         </div>
-        <a
-          href="/admin/login"
-          className="pub-btn pub-btn-primary"
-          style={{ fontSize: 11, padding: "8px 14px" }}
-        >
-          Admin Login
-        </a>
       </nav>
 
       {/* HOME */}
