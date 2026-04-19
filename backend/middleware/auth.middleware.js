@@ -2,29 +2,39 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 const protect = async (req, res, next) => {
-  let token;
+  const token = req.cookies?.cms_token;
 
-  if (req.headers.authorization?.startsWith("Bearer")) {
-    token = req.headers.authorization.split(" ")[1];
+  // Fallback to httpOnly cookie
+  if (!token && req.cookies?.cms_token) {
+    token = req.cookies.cms_token;
   }
 
   if (!token) {
-    return res.status(401).json({ success: false, message: "Not authorized — no token" });
+    return res
+      .status(401)
+      .json({ success: false, message: "Not authorized — no token" });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id).select("-password");
-    if (!req.user) return res.status(401).json({ success: false, message: "User not found" });
+    if (!req.user)
+      return res
+        .status(401)
+        .json({ success: false, message: "User not found" });
     next();
   } catch {
-    return res.status(401).json({ success: false, message: "Token invalid or expired" });
+    return res
+      .status(401)
+      .json({ success: false, message: "Token invalid or expired" });
   }
 };
 
 const adminOnly = (req, res, next) => {
   if (req.user?.role !== "admin") {
-    return res.status(403).json({ success: false, message: "Admin access required" });
+    return res
+      .status(403)
+      .json({ success: false, message: "Admin access required" });
   }
   next();
 };

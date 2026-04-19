@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const path = require("path");
 const connectDB = require("./config/db");
+const cookieParser = require("cookie-parser");
 
 // Load env vars — must be first
 dotenv.config();
@@ -26,10 +27,11 @@ const app = express();
 // ── Middleware ──────────────────────────────────────────────────────────────
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
+    origin: "http://localhost:5173", // your Vite dev port
+    credentials: true, // allow cookies cross-origin
   }),
 );
+app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
@@ -97,7 +99,7 @@ app.use((err, req, res, next) => {
 // ── Start Server ───────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
-  console.log(`\n🏗️  R.R.Construction API → http://localhost:${PORT}`);
+  console.log(`\n R.R.Construction API → http://localhost:${PORT}`);
   console.log(`   Environment : ${process.env.NODE_ENV || "development"}`);
   console.log(
     `   Database    : ${process.env.MONGO_URI.split("@").pop() || "connected"}\n`,
