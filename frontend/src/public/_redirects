@@ -1,0 +1,2 @@
+Set-Content -Path "public/_redirects" -Value "/*    /index.html   200"
+Set-Content -Path "dist/_redirects" -Value "/*    /index.html   200"

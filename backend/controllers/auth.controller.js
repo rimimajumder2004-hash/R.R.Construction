@@ -8,7 +8,7 @@ const generateToken = (id) =>
 // Cookie options kept in one place so login/logout always match
 const COOKIE_OPTS = {
   httpOnly: true, // Fix 2: JS can't read this cookie
-  sameSite: "lax", // CSRF protection for local dev
+  sameSite: "none",
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms — matches JWT expiry
 };
 
@@ -67,6 +67,10 @@ exports.register = async (req, res) => {
 
 // @route  POST /api/auth/logout        Fix 3: logout clears the cookie
 exports.logout = (req, res) => {
-  res.clearCookie("cms_token", { httpOnly: true, sameSite: "lax" });
+  res.clearCookie("cms_token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  });
   return res.status(200).json({ success: true, message: "Logged out" });
 };
