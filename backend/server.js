@@ -27,8 +27,11 @@ const app = express();
 // ── Middleware ──────────────────────────────────────────────────────────────
 app.use(
   cors({
-    origin: "http://localhost:5173", // your Vite dev port
-    credentials: true, // allow cookies cross-origin
+    origin: [
+      "http://localhost:5173",
+      "https://construction-site-rrconstructions.netlify.app",
+    ],
+    credentials: true,
   }),
 );
 app.use(cookieParser());

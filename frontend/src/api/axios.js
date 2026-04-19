@@ -1,12 +1,10 @@
 import axios from "axios";
+import BASE_URL from "../config"; // add this import
 
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: `${BASE_URL}/api`, // change this line
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
-
-// Remove the response interceptor entirely — AuthContext handles 401 already
-// No window.location.href, no localStorage, nothing
 
 export default api;
