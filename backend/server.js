@@ -27,10 +27,7 @@ const app = express();
 // ── Middleware ──────────────────────────────────────────────────────────────
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://construction-site-rrconstructions.netlify.app",
-    ],
+    origin: ["http://localhost:5173", "https://rrc-build.netlify.app"],
     credentials: true,
   }),
 );
